@@ -27,7 +27,10 @@ jobs:
         working-directory: ./Frontend
         env: 
           NODE_ENV: development
-
+          
+      - name: Ensure Vitest installed
+        run: npm install vitest --save-dev
+        working-directory: ./Frontend
 
       - name: Run tests
         run: npm run test
