@@ -27,6 +27,7 @@ jobs:
           npm ci
           npm install --save-dev vitest
           npm install -D jsdom
+          npm install -D @testing-library/jest-dom
         working-directory: ./Frontend
         env:
           NODE_ENV: development
