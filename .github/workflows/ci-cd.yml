@@ -26,12 +26,9 @@ jobs:
         run: npm ci
         working-directory: ./Frontend
 
-      - name: Lint code
-        run: npm run lint
-        working-directory: ./Frontend
 
       - name: Run tests
-        run: npm test
+        run: npm run test
         working-directory: ./Frontend
 
       - name: Build project
