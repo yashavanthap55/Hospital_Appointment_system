@@ -1,13 +1,12 @@
 {
-  "name": "cp2",
-  "homepage": "https://yashavanthap55.github.io/HOSPITAL_APPOINTMENT",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "node ./node_modules/vite/bin/vite.js build",
-    "dev": "node ./node_modules/vite/bin/vite.js",
-    "start": "vite preview",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite preview --port $PORT --host",
     "backend": "node app.js",
     "full-start": "concurrently \"npm run dev\" \"npm run backend\"",
     "lint": "eslint .",
