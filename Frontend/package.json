@@ -10,7 +10,7 @@
     "backend": "node app.js",
     "full-start": "concurrently \"npm run dev\" \"npm run backend\"",
     "lint": "eslint .",
-    "deploy": "gh-pages -d dist"
+    "test": "vitest run"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
