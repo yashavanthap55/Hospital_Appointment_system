@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = 5000; // you can change this if needed
@@ -59,15 +60,19 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Username already exists' });
     }
 
-    const newUser = new User({ username, password });
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
+
     res.json({ message: 'Sign Up Successful!' });
   } catch (err) {
     res.status(500).json({ error: 'Error signing up user' });
   }
 });
 
-// LOGIN
+// LOGIN (Compare entered password with hashed one)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
@@ -75,12 +80,17 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await User.findOne({ username });
-    if (!user || user.password !== password)
+    if (!user)
+      return res.status(400).json({ error: 'Invalid credentials' });
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
       return res.status(400).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role || 'user' },
-      'mysecretkey', // use process.env.JWT_SECRET in production
+      'mysecretkey',
       { expiresIn: '1h' }
     );
 
@@ -91,10 +101,9 @@ app.post('/login', async (req, res) => {
       role: user.role || 'user',
     });
   } catch (err) {
-    return res.status(500).json({ error: 'Database query error' });
+    res.status(500).json({ error: 'Database query error' });
   }
 });
-
 
 // GET ALL APPOINTMENTS
 app.get('/appointments', async (req, res) => {
